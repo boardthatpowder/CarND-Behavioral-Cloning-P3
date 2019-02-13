@@ -1,0 +1,131 @@
+if MODEL_MODE == 'nvidia-v2':
+    drop_rate=0.5
+    
+    # Preprocess incoming data, centered around zero with small standard deviation 
+    model.add(Lambda(lambda x: x/127.5 - 1., input_shape=(160,320,3), name='norm'))
+    # crop it
+    model.add(Cropping2D(cropping=((50,20),(0,0)), name='crop'))
+
+    ##### NVidia
+    model.add(Conv2D(24,(5,5),strides=(2,2),activation='elu',name='conv1'))
+    model.add(Conv2D(36,(5,5),strides=(2,2),activation='elu',name='conv2'))
+    model.add(Conv2D(48,(5,5),strides=(2,2),activation='elu',name='conv3'))
+    
+    model.add(Conv2D(64,(3,3),activation='elu',name='conv4'))
+    model.add(Conv2D(64,(3,3),activation='elu',name='conv5'))
+    
+    model.add(Flatten(name='flatten'))
+    
+    model.add(Dense(100,name='dense1'))
+    model.add(Dropout(drop_rate, name='drop1'))
+    model.add(ELU(name='elu1'))
+    model.add(Dense(50,name='dense2'))
+    model.add(Dropout(drop_rate, name='drop2'))
+    model.add(ELU(name='elu2'))
+    model.add(Dense(10,name='dense3'))
+    model.add(Dropout(drop_rate, name='drop3'))
+    model.add(ELU(name='elu3'))
+    
+    model.add(Dense(1,activation='tanh',name='output'))
+
+    model.summary()
+
+    # optimmizer = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+    model.compile(loss='mse', optimizer='adam')
+
+    save_to='model-nvidia-v2.h5'
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Layer (type)                 Output Shape              Param #   
+=================================================================
+norm (Lambda)                (None, 160, 320, 3)       0         
+_________________________________________________________________
+crop (Cropping2D)            (None, 90, 320, 3)        0         
+_________________________________________________________________
+conv1 (Conv2D)               (None, 43, 158, 24)       1824      
+_________________________________________________________________
+conv2 (Conv2D)               (None, 20, 77, 36)        21636     
+_________________________________________________________________
+conv3 (Conv2D)               (None, 8, 37, 48)         43248     
+_________________________________________________________________
+conv4 (Conv2D)               (None, 6, 35, 64)         27712     
+_________________________________________________________________
+conv5 (Conv2D)               (None, 4, 33, 64)         36928     
+_________________________________________________________________
+flatten (Flatten)            (None, 8448)              0         
+_________________________________________________________________
+dense1 (Dense)               (None, 100)               844900    
+_________________________________________________________________
+drop1 (Dropout)              (None, 100)               0         
+_________________________________________________________________
+elu1 (ELU)                   (None, 100)               0         
+_________________________________________________________________
+dense2 (Dense)               (None, 50)                5050      
+_________________________________________________________________
+drop2 (Dropout)              (None, 50)                0         
+_________________________________________________________________
+elu2 (ELU)                   (None, 50)                0         
+_________________________________________________________________
+dense3 (Dense)               (None, 10)                510       
+_________________________________________________________________
+drop3 (Dropout)              (None, 10)                0         
+_________________________________________________________________
+elu3 (ELU)                   (None, 10)                0         
+_________________________________________________________________
+output (Dense)               (None, 1)                 11        
+=================================================================
+Total params: 981,819
+Trainable params: 981,819
+Non-trainable params: 0
+_________________________________________________________________
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Epoch 1/100
+46/45 [==============================] - 61s 1s/step - loss: 0.1425 - val_loss: 0.0564
+
+Epoch 00001: val_loss improved from inf to 0.05645, saving model to model-nvidia-v2.h5
+Epoch 2/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0698 - val_loss: 0.0538
+
+Epoch 00002: val_loss improved from 0.05645 to 0.05376, saving model to model-nvidia-v2.h5
+Epoch 3/100
+46/45 [==============================] - 56s 1s/step - loss: 0.0595 - val_loss: 0.0527
+
+Epoch 00003: val_loss improved from 0.05376 to 0.05268, saving model to model-nvidia-v2.h5
+Epoch 4/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0556 - val_loss: 0.0528
+
+Epoch 00004: val_loss did not improve from 0.05268
+Epoch 5/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0523 - val_loss: 0.0527
+
+Epoch 00005: val_loss did not improve from 0.05268
+Epoch 6/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0504 - val_loss: 0.0525
+
+Epoch 00006: val_loss improved from 0.05268 to 0.05245, saving model to model-nvidia-v2.h5
+Epoch 7/100
+46/45 [==============================] - 56s 1s/step - loss: 0.0489 - val_loss: 0.0531
+
+Epoch 00007: val_loss did not improve from 0.05245
+Epoch 8/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0476 - val_loss: 0.0538
+
+Epoch 00008: val_loss did not improve from 0.05245
+Epoch 9/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0470 - val_loss: 0.0549
+
+Epoch 00009: val_loss did not improve from 0.05245
+Epoch 10/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0454 - val_loss: 0.0555
+
+Epoch 00010: val_loss did not improve from 0.05245
+Epoch 11/100
+46/45 [==============================] - 55s 1s/step - loss: 0.0448 - val_loss: 0.0572
+
+Epoch 00011: val_loss did not improve from 0.05245
+Epoch 00011: early stopping
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
