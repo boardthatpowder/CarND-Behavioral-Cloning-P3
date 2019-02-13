@@ -33,18 +33,18 @@ The goals / steps of this project are the following:
 #### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 My project includes the following files:
-* model.ipynb containing the Jupyter notebook to create and train the model
-* drive.py for driving the car in autonomous mode
-* model.h5 containing a trained convolution neural network 
-* writeup_report.md summarizing the results
-* video.mp4 video of simulator running in autonomous mode
+* `model.ipynb` containing the Jupyter notebook to create and train the model
+* `drive.py` for driving the car in autonomous mode
+* `model.h5` containing a trained convolution neural network 
+* `report.md` summarizing the results
+* `video.mp4` video of simulator running in autonomous mode
 
 #### 2. Submission includes functional code
 
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 
 ```sh
-python drive.py model.h5
+python3 drive.py model.h5
 ```
 
 Note that I changed the following from the standard:
@@ -96,7 +96,7 @@ To combat the overfitting, I introduced Dropout layers, and added an EarlyStoppi
 
 During prediction, I was not happy with the intial quality as the car was driving off the track in multiple places therefore augmented the data as described in the _Appropriate training data_ section.  I experimented with adjusting angles for the left and right camera images from+/0.1 to +/-0.3, but settled on +/-0.2 as that achieved the best results.
 
-To match the input of the NVidia DAVE-2 model exactly, I preprocessed the training data to convert from the expected RGB color space to YUV.  Then as part of the model itself I cropped and resized the images to 66x200.
+To match the input of the NVidia DAVE-2 model exactly, I preprocessed the training data to convert from the expected RGB color space to YUV.  Then as part of the model itself (to make it easier for `drive.py` to consume at prediction time) I cropped and resized the images to 66x200.
 
 Finally I experimented with the activation layers, originally adding ReLU layers after each Convoutional layer, but then finally adding ELU layers to all layers except the output later.
 
@@ -380,15 +380,34 @@ To process the images I first imported the recorded driving log, and split these
   
 The following shows 10 random images (the left, center and right camera angels), along with how they looked once they had been converted to YUV, normalized, cropped, and then resized.
 
+##### Random Image 1
 ![training-data-1][training-data-1]
+
+##### Random Image 2
 ![training-data-2][training-data-2]
+
+##### Random Image 3
 ![training-data-3][training-data-3]
+
+##### Random Image 4
 ![training-data-4][training-data-4]
+
+##### Random Image 5
 ![training-data-5][training-data-5]
+
+##### Random Image 6
 ![training-data-6][training-data-6]
+
+##### Random Image 7
 ![training-data-7][training-data-7]
+
+##### Random Image 8
 ![training-data-8][training-data-8]
+
+##### Random Image 9
 ![training-data-9][training-data-9]
+
+##### Random Image 10
 ![training-data-10][training-data-10]
 
 
